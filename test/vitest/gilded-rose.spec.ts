@@ -50,4 +50,18 @@ describe("Gilded Rose", () => {
       expect(updateItem("Aged Brie", 0, 49).quality).toBe(50);
     });
   });
+
+  describe("Sulfuras", () => {
+    it("never changes quality", () => {
+      expect(updateItem("Sulfuras, Hand of Ragnaros", 10, 80).quality).toBe(80);
+    });
+
+    it("never changes sellIn", () => {
+      expect(updateItem("Sulfuras, Hand of Ragnaros", 10, 80).sellIn).toBe(10);
+    });
+
+    it("never changes quality after the sell date", () => {
+      expect(updateItem("Sulfuras, Hand of Ragnaros", -1, 80).quality).toBe(80);
+    });
+  });
 });
