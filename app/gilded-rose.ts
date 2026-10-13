@@ -44,6 +44,16 @@ function updateBackstagePass(item: Item): void {
   }
 }
 
+function updateNormalItem(item: Item): void {
+  if (item.quality > 0) {
+    item.quality = item.quality - 1;
+  }
+  item.sellIn = item.sellIn - 1;
+  if (item.sellIn < 0 && item.quality > 0) {
+    item.quality = item.quality - 1;
+  }
+}
+
 export class GildedRose {
   items: Array<Item>;
 
@@ -65,15 +75,7 @@ export class GildedRose {
         continue;
       }
 
-      if (item.quality > 0) {
-        item.quality = item.quality - 1;
-      }
-      item.sellIn = item.sellIn - 1;
-      if (item.sellIn < 0) {
-        if (item.quality > 0) {
-          item.quality = item.quality - 1;
-        }
-      }
+      updateNormalItem(item);
     }
 
     return this.items;
