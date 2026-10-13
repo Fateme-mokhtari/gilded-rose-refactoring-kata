@@ -57,23 +57,15 @@ function updateBackstagePass(item: Item): void {
   }
 }
 
-function updateNormalItem(item: Item): void {
-  decreaseQuality(item, 1);
-  item.sellIn = item.sellIn - 1;
-  if (isExpired(item)) {
-    decreaseQuality(item, 1);
-  }
-}
-
 function isConjured(item: Item): boolean {
   return item.name.startsWith(CONJURED_PREFIX);
 }
 
-function updateConjuredItem(item: Item): void {
-  decreaseQuality(item, 2);
+function updateDegradingItem(item: Item, degradeRate: number): void {
+  decreaseQuality(item, degradeRate);
   item.sellIn = item.sellIn - 1;
   if (isExpired(item)) {
-    decreaseQuality(item, 2);
+    decreaseQuality(item, degradeRate);
   }
 }
 
@@ -98,11 +90,11 @@ export class GildedRose {
         continue;
       }
       if (isConjured(item)) {
-        updateConjuredItem(item);
+        updateDegradingItem(item, 2);
         continue;
       }
 
-      updateNormalItem(item);
+      updateDegradingItem(item, 1);
     }
 
     return this.items;
