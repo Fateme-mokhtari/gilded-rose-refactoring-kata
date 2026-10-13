@@ -14,13 +14,30 @@ const AGED_BRIE = "Aged Brie";
 const BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert";
 const SULFURAS = "Sulfuras, Hand of Ragnaros";
 
-function updateAgedBrie(item: Item): void {
-  item.sellIn = item.sellIn - 1;
-  if (item.quality < 50) {
-    item.quality = item.quality + 1;
+const MIN_QUALITY = 0;
+const MAX_QUALITY = 50;
+
+function increaseQuality(item: Item, amount: number): void {
+  if (item.quality < MAX_QUALITY) {
+    item.quality = Math.min(MAX_QUALITY, item.quality + amount);
   }
-  if (item.sellIn < 0 && item.quality < 50) {
-    item.quality = item.quality + 1;
+}
+
+function decreaseQuality(item: Item, amount: number): void {
+  if (item.quality > MIN_QUALITY) {
+    item.quality = Math.max(MIN_QUALITY, item.quality - amount);
+  }
+}
+
+function isExpired(item: Item): boolean {
+  return item.sellIn < 0;
+}
+
+function updateAgedBrie(item: Item): void {
+  increaseQuality(item, 1);
+  item.sellIn = item.sellIn - 1;
+  if (isExpired(item)) {
+    increaseQuality(item, 1);
   }
 }
 
@@ -31,26 +48,19 @@ function updateBackstagePass(item: Item): void {
   } else if (item.sellIn <= 10) {
     increase = 2;
   }
-  if (item.quality < 50) {
-    item.quality = item.quality + increase;
-    if (item.quality > 50) {
-      item.quality = 50;
-    }
-  }
+  increaseQuality(item, increase);
 
   item.sellIn = item.sellIn - 1;
-  if (item.sellIn < 0) {
-    item.quality = 0;
+  if (isExpired(item)) {
+    item.quality = MIN_QUALITY;
   }
 }
 
 function updateNormalItem(item: Item): void {
-  if (item.quality > 0) {
-    item.quality = item.quality - 1;
-  }
+  decreaseQuality(item, 1);
   item.sellIn = item.sellIn - 1;
-  if (item.sellIn < 0 && item.quality > 0) {
-    item.quality = item.quality - 1;
+  if (isExpired(item)) {
+    decreaseQuality(item, 1);
   }
 }
 
