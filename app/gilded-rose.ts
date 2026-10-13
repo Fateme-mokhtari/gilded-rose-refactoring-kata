@@ -13,6 +13,7 @@ export class Item {
 const AGED_BRIE = "Aged Brie";
 const BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert";
 const SULFURAS = "Sulfuras, Hand of Ragnaros";
+const CONJURED_PREFIX = "Conjured";
 
 const MIN_QUALITY = 0;
 const MAX_QUALITY = 50;
@@ -64,6 +65,18 @@ function updateNormalItem(item: Item): void {
   }
 }
 
+function isConjured(item: Item): boolean {
+  return item.name.startsWith(CONJURED_PREFIX);
+}
+
+function updateConjuredItem(item: Item): void {
+  decreaseQuality(item, 2);
+  item.sellIn = item.sellIn - 1;
+  if (isExpired(item)) {
+    decreaseQuality(item, 2);
+  }
+}
+
 export class GildedRose {
   items: Array<Item>;
 
@@ -82,6 +95,10 @@ export class GildedRose {
       }
       if (item.name === BACKSTAGE_PASS) {
         updateBackstagePass(item);
+        continue;
+      }
+      if (isConjured(item)) {
+        updateConjuredItem(item);
         continue;
       }
 
