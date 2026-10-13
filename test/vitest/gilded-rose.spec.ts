@@ -28,4 +28,26 @@ describe("Gilded Rose", () => {
       expect(updateItem("Normal item", 0, 1).quality).toBe(0);
     });
   });
+
+  describe("Aged Brie", () => {
+    it("increases quality by 1", () => {
+      expect(updateItem("Aged Brie", 10, 20).quality).toBe(21);
+    });
+
+    it("decreases sellIn by 1", () => {
+      expect(updateItem("Aged Brie", 10, 20).sellIn).toBe(9);
+    });
+
+    it("increases quality by 2 after the sell date", () => {
+      expect(updateItem("Aged Brie", 0, 20).quality).toBe(22);
+    });
+
+    it("never increases quality above 50", () => {
+      expect(updateItem("Aged Brie", 10, 50).quality).toBe(50);
+    });
+
+    it("never increases quality above 50 after the sell date", () => {
+      expect(updateItem("Aged Brie", 0, 49).quality).toBe(50);
+    });
+  });
 });
