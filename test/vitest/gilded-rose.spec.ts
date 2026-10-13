@@ -64,4 +64,52 @@ describe("Gilded Rose", () => {
       expect(updateItem("Sulfuras, Hand of Ragnaros", -1, 80).quality).toBe(80);
     });
   });
+
+  describe("Backstage passes", () => {
+    const BACKSTAGE_PASS = "Backstage passes to a TAFKAL80ETC concert";
+
+    it("increases quality by 1 when more than 10 days left", () => {
+      expect(updateItem(BACKSTAGE_PASS, 11, 20).quality).toBe(21);
+    });
+
+    it("increases quality by 2 when 10 days left", () => {
+      expect(updateItem(BACKSTAGE_PASS, 10, 20).quality).toBe(22);
+    });
+
+    it("increases quality by 2 when 6 days left", () => {
+      expect(updateItem(BACKSTAGE_PASS, 6, 20).quality).toBe(22);
+    });
+
+    it("increases quality by 3 when 5 days left", () => {
+      expect(updateItem(BACKSTAGE_PASS, 5, 20).quality).toBe(23);
+    });
+
+    it("increases quality by 3 when 1 day left", () => {
+      expect(updateItem(BACKSTAGE_PASS, 1, 20).quality).toBe(23);
+    });
+
+    it("drops quality to 0 after the concert", () => {
+      expect(updateItem(BACKSTAGE_PASS, 0, 20).quality).toBe(0);
+    });
+
+    it("stays at 0 long after the concert", () => {
+      expect(updateItem(BACKSTAGE_PASS, -1, 20).quality).toBe(0);
+    });
+
+    it("decreases sellIn by 1", () => {
+      expect(updateItem(BACKSTAGE_PASS, 10, 20).sellIn).toBe(9);
+    });
+
+    it("never increases quality above 50", () => {
+      expect(updateItem(BACKSTAGE_PASS, 5, 49).quality).toBe(50);
+    });
+
+    it("never increases quality above 50 when 10 days left", () => {
+      expect(updateItem(BACKSTAGE_PASS, 10, 49).quality).toBe(50);
+    });
+
+    it("stays at 50 when quality is already 50", () => {
+      expect(updateItem(BACKSTAGE_PASS, 10, 50).quality).toBe(50);
+    });
+  });
 });
